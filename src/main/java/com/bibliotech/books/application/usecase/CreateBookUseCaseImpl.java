@@ -2,12 +2,19 @@ package com.bibliotech.books.application.usecase;
 
 import com.bibliotech.books.domain.command.CreateBookCommand;
 import com.bibliotech.books.domain.entity.*;
+import com.bibliotech.books.domain.repository.CreateBookRepository;
 import com.bibliotech.books.domain.usecase.CreateBookUseCase;
+import jakarta.enterprise.context.ApplicationScoped;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
+@RequiredArgsConstructor
 public class CreateBookUseCaseImpl implements CreateBookUseCase {
+
+    private final CreateBookRepository createBookRepository;
 
     @Override
     public void create(CreateBookCommand command) {
@@ -23,6 +30,7 @@ public class CreateBookUseCaseImpl implements CreateBookUseCase {
                 title,
                 authors
         );
-        //save
+
+        createBookRepository.create(book);
     }
 }

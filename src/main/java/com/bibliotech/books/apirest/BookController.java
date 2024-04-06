@@ -1,6 +1,8 @@
 package com.bibliotech.books.apirest;
 
 import com.bibliotech.books.apirest.dto.BookDTO;
+import com.bibliotech.books.apirest.mapper.BookMapper;
+import com.bibliotech.books.domain.usecase.CreateBookUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import jakarta.ws.rs.*;
@@ -15,6 +17,7 @@ import java.util.*;
 public class BookController {
 
     private final Map<UUID, BookDTO> books = new HashMap<>();
+    private final CreateBookUseCase createBookUseCase;
 
     @GET
     public Response findAll() {
@@ -24,15 +27,8 @@ public class BookController {
 
     @POST
     public Response create(@Valid BookDTO book) {
-
-        if (books.containsKey(book.id())) {
-            return Response
-                    .status(409)
-                    .build();
-        }
-
-        books.put(book.id(), book);
-
+        final var command = BookMapper.map(book);
+        createBookUseCase.create(command);
         return Response
                 .created(null)
                 .build();

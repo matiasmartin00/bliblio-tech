@@ -1,0 +1,5 @@
+quarkus:
+  mongodb:
+    connection-string: mongodb://root:example@localhost:27017/
+    database: bliblio-tech
+    uuid-representation: standard
