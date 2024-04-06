@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CreateBookUseCaseImpl implements CreateBookUseCase {
+
     @Override
     public void create(CreateBookCommand command) {
         final var id = new BookID(command.id());
