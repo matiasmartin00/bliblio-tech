@@ -2,11 +2,9 @@ package com.bibliotech.books.apirest;
 
 import com.bibliotech.books.apirest.dto.BookDTO;
 import com.bibliotech.books.apirest.mapper.BookMapper;
-import com.bibliotech.books.domain.usecase.CreateBookUseCase;
+import com.bibliotech.books.domain.command.CommandBus;
 import jakarta.validation.Valid;
-import jakarta.validation.Validator;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +15,7 @@ import java.util.*;
 public class BookController {
 
     private final Map<UUID, BookDTO> books = new HashMap<>();
-    private final CreateBookUseCase createBookUseCase;
+    private final CommandBus commandBus;
 
     @GET
     public Response findAll() {
@@ -28,7 +26,7 @@ public class BookController {
     @POST
     public Response create(@Valid BookDTO book) {
         final var command = BookMapper.map(book);
-        createBookUseCase.create(command);
+        commandBus.execute(command);
         return Response
                 .created(null)
                 .build();
