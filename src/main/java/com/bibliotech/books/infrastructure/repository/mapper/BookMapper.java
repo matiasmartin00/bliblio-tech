@@ -2,9 +2,13 @@ package com.bibliotech.books.infrastructure.repository.mapper;
 
 import com.bibliotech.books.domain.entity.*;
 import com.bibliotech.books.domain.entity.metadata.*;
+import com.bibliotech.books.domain.projection.Paginated;
+import com.bibliotech.books.domain.projection.PaginatedBook;
+import com.bibliotech.books.domain.projection.ProjectionBook;
 import com.bibliotech.books.infrastructure.repository.mongo.BookEntity;
 import com.bibliotech.books.infrastructure.repository.mongo.MetadataEntity;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -20,6 +24,27 @@ public class BookMapper {
                 .authors(map(src.getAuthors()))
                 .metadata(map(src.getMetadata()))
                 .build();
+    }
+
+    public static PaginatedBook mapPaginated(List<BookEntity> src, Integer offset, Integer limit, Long total) {
+        return new PaginatedBook(
+                mapListProjection(src),
+                mapPaginated(offset, limit, total)
+        );
+    }
+
+    private static Paginated mapPaginated(Integer offset, Integer limit, Long total) {
+        return new Paginated(total, offset, limit);
+    }
+
+    private static List<ProjectionBook> mapListProjection(List<BookEntity> src) {
+        return src.stream()
+                .map(BookMapper::mapProjection)
+                .collect(Collectors.toList());
+    }
+
+    private static ProjectionBook mapProjection(BookEntity src) {
+        return new ProjectionBook(src.getId(), src.getTitle(), src.getAuthors());
     }
 
     private static BookID map(UUID src) {

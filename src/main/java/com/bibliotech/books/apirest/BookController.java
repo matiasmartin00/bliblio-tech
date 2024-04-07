@@ -8,6 +8,8 @@ import com.bibliotech.books.apirest.mapper.BookMapper;
 import com.bibliotech.books.domain.command.CommandBus;
 import com.bibliotech.books.domain.query.QueryBus;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
@@ -23,8 +25,12 @@ public class BookController {
     private final QueryBus queryBus;
 
     @GET
-    public Response findAll() {
-        return Response.status(501).build();
+    public Response findAll(@NotNull @Min(0) @QueryParam("offset") Integer offset, @NotNull @Min(1) @Max(100) @QueryParam("limit") Integer limit) {
+        var query = BookMapper.mapQuery(offset, limit);
+        var result = queryBus.ask(query);
+        return Response.ok(
+                BookMapper.map(result)
+        ).build();
     }
 
     @POST
