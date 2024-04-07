@@ -1,7 +1,10 @@
 package com.bibliotech.books.apirest.mapper;
 
 import com.bibliotech.books.apirest.dto.BookDTO;
+import com.bibliotech.books.apirest.dto.CreateBookDTO;
+import com.bibliotech.books.apirest.dto.UpdateBookDTO;
 import com.bibliotech.books.domain.command.CreateBookCommand;
+import com.bibliotech.books.domain.command.UpdateBookCommand;
 import com.bibliotech.books.domain.entity.Authors;
 import com.bibliotech.books.domain.entity.Book;
 import com.bibliotech.books.domain.entity.BookID;
@@ -16,9 +19,17 @@ import static java.util.Objects.isNull;
 
 public class BookMapper {
 
-    public static CreateBookCommand map(BookDTO dto) {
+    public static CreateBookCommand map(CreateBookDTO dto) {
         return new CreateBookCommand(
                 dto.id(),
+                dto.title(),
+                dto.authors()
+        );
+    }
+
+    public static UpdateBookCommand map(UUID id, UpdateBookDTO dto) {
+        return new UpdateBookCommand(
+                id,
                 dto.title(),
                 dto.authors()
         );
