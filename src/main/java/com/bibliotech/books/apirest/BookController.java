@@ -49,13 +49,17 @@ public class BookController {
     @Path("/{id}")
     @DELETE
     public Response delete(@PathParam("id") UUID id) {
-        return Response.status(501).build();
+        var command = BookMapper.mapCommand(id);
+        commandBus.execute(command);
+        return Response
+                .noContent()
+                .build();
     }
 
     @Path("/{id}")
     @GET
     public Response getById(@PathParam("id") UUID id) {
-        var bookId = BookMapper.map(id);
+        var bookId = BookMapper.mapQuery(id);
         var book = queryBus.ask(bookId);
         return Response
                 .ok(BookMapper.map(book))

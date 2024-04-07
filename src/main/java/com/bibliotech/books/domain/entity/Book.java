@@ -54,5 +54,12 @@ public class Book extends AggregateRoot<BookID> {
         this.authors = authors;
         this.metadata = metadata;
     }
+
+    public void delete() {
+       this.metadata = getMetadata().toBuilder()
+                .deletedBy(new DeletedBy("system"))
+                .deletedAt(new DeletedAt(LocalDateTime.now()))
+                .build();
+    }
 }
 

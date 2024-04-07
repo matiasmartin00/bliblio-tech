@@ -71,7 +71,7 @@ public class BookMapper {
                 .modifiedAt(map(metadata.modifiedAt()))
                 .modifiedBy(map(metadata.modifiedBy()))
                 .deletedAt(map(metadata.deletedAt()))
-                .modifiedAt(map(metadata.deletedAt()))
+                .deletedBy(map(metadata.deletedBy()))
                 .build();
     }
 

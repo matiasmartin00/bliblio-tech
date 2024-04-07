@@ -2,10 +2,7 @@ package com.bibliotech.books.infrastructure.repository;
 
 import com.bibliotech.books.domain.entity.Book;
 import com.bibliotech.books.domain.entity.BookID;
-import com.bibliotech.books.domain.repository.CreateBookRepository;
-import com.bibliotech.books.domain.repository.DeleteBookRepository;
-import com.bibliotech.books.domain.repository.GetBookByIDRepository;
-import com.bibliotech.books.domain.repository.UpdateBookRepository;
+import com.bibliotech.books.domain.repository.*;
 import com.bibliotech.books.infrastructure.repository.mapper.BookMapper;
 import com.bibliotech.books.infrastructure.repository.mongo.BookEntity;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -13,7 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Optional;
 
 @ApplicationScoped
-public class BookRepositoryImpl implements CreateBookRepository, UpdateBookRepository, DeleteBookRepository, GetBookByIDRepository {
+public class BookRepositoryImpl implements CreateBookRepository, UpdateBookRepository, DeleteBookRepository, GetBookByIDRepository, ExistsBookByIDRepository {
 
     @Override
     public void create(Book book) {
@@ -38,5 +35,10 @@ public class BookRepositoryImpl implements CreateBookRepository, UpdateBookRepos
         Optional<BookEntity> entity = BookEntity.findByIdOptional(id.value());
         return entity
                 .map(BookMapper::map);
+    }
+
+    @Override
+    public boolean exists(BookID id) {
+        return BookEntity.count("id", id.value()) > 0;
     }
 }

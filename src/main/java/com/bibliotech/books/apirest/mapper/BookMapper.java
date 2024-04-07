@@ -4,10 +4,10 @@ import com.bibliotech.books.apirest.dto.BookDTO;
 import com.bibliotech.books.apirest.dto.CreateBookDTO;
 import com.bibliotech.books.apirest.dto.UpdateBookDTO;
 import com.bibliotech.books.domain.command.CreateBookCommand;
+import com.bibliotech.books.domain.command.DeleteBookCommand;
 import com.bibliotech.books.domain.command.UpdateBookCommand;
 import com.bibliotech.books.domain.entity.Authors;
 import com.bibliotech.books.domain.entity.Book;
-import com.bibliotech.books.domain.entity.BookID;
 import com.bibliotech.books.domain.entity.ValueObject;
 import com.bibliotech.books.domain.query.GetByIDQuery;
 
@@ -35,7 +35,11 @@ public class BookMapper {
         );
     }
 
-    public static GetByIDQuery map(UUID id) {
+    public static DeleteBookCommand mapCommand(UUID id) {
+        return new DeleteBookCommand(id);
+    }
+
+    public static GetByIDQuery mapQuery(UUID id) {
         return new GetByIDQuery(id);
     }
 
