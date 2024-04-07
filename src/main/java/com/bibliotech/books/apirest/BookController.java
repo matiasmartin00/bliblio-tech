@@ -3,6 +3,7 @@ package com.bibliotech.books.apirest;
 import com.bibliotech.books.apirest.dto.BookDTO;
 import com.bibliotech.books.apirest.mapper.BookMapper;
 import com.bibliotech.books.domain.command.CommandBus;
+import com.bibliotech.books.domain.query.QueryBus;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
@@ -16,6 +17,7 @@ public class BookController {
 
     private final Map<UUID, BookDTO> books = new HashMap<>();
     private final CommandBus commandBus;
+    private final QueryBus queryBus;
 
     @GET
     public Response findAll() {
@@ -66,13 +68,10 @@ public class BookController {
     @Path("/{id}")
     @GET
     public Response getById(@PathParam("id") UUID id) {
-        if (!books.containsKey(id)) {
-            return Response
-                    .status(404)
-                    .build();
-        }
+        var bookId = BookMapper.map(id);
+        var book = queryBus.ask(bookId);
         return Response
-                .ok(books.get(id))
+                .ok(BookMapper.map(book))
                 .build();
     }
 }

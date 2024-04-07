@@ -2,9 +2,7 @@ package com.bibliotech.books.infrastructure.repository.mongo;
 
 import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
 import io.quarkus.mongodb.panache.common.MongoEntity;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
@@ -13,6 +11,8 @@ import java.util.UUID;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @MongoEntity(collection = "books")
 public class BookEntity extends PanacheMongoEntityBase {

@@ -3,10 +3,7 @@ package com.bibliotech.books.domain.entity;
 import com.bibliotech.books.domain.entity.metadata.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -19,7 +16,8 @@ public class Book extends AggregateRoot<BookID> {
     private Title title;
     private Authors authors;
 
-    private Book(BookID bookID, Title title, Authors authors, Metadata metadata) {
+    @Builder
+    public Book(BookID bookID, Title title, Authors authors, Metadata metadata) {
         super(bookID, metadata);
         this.title = title;
         this.authors = authors;

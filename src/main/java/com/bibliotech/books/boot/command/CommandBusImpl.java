@@ -31,7 +31,7 @@ public class CommandBusImpl<C extends Command> implements CommandBus {
     @Override
     public void execute(Command command) {
         var handler = Optional.ofNullable(commandHandlers.get(command.getClass()))
-                .orElseThrow(() -> new RuntimeException("Command don't have handler " + command.getClass().getSimpleName()));
+                .orElseThrow(() -> new RuntimeException("Command can't be handler " + command.getClass().getSimpleName()));
         handler.execute((C) command);
     }
 }
