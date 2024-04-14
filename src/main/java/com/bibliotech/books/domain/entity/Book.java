@@ -1,12 +1,13 @@
 package com.bibliotech.books.domain.entity;
 
 import com.bibliotech.books.domain.entity.metadata.*;
-import jakarta.validation.Valid;
+import com.bibliotech.books.domain.event.BookCreatedEvent;
+import com.bibliotech.books.domain.event.BookDeletedEvent;
+import com.bibliotech.books.domain.event.BookUpdatedEvent;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Getter
 @ToString(callSuper = true)
@@ -33,12 +34,18 @@ public class Book extends AggregateRoot<BookID> {
                 .createdAt(new CreatedAt(LocalDateTime.now()))
                 .build();
 
-        return new Book(
+        final var book = new Book(
                 id,
                 title,
                 authors,
                 metadata
         );
+
+        final var event = new BookCreatedEvent(id);
+
+        book.addEvent(event);
+
+        return book;
     }
 
     public void update(
@@ -53,6 +60,10 @@ public class Book extends AggregateRoot<BookID> {
         this.title = title;
         this.authors = authors;
         this.metadata = metadata;
+
+        final var event = new BookUpdatedEvent(this.getId());
+
+        this.addEvent(event);
     }
 
     public void delete() {
@@ -60,6 +71,10 @@ public class Book extends AggregateRoot<BookID> {
                 .deletedBy(new DeletedBy("system"))
                 .deletedAt(new DeletedAt(LocalDateTime.now()))
                 .build();
+
+       var event = new BookDeletedEvent(this.getId());
+
+       this.addEvent(event);
     }
 }
 

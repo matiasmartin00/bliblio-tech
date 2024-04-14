@@ -3,6 +3,7 @@ package com.bibliotech.books.application.usecase;
 import com.bibliotech.books.domain.command.UpdateBookCommand;
 import com.bibliotech.books.domain.entity.Author;
 import com.bibliotech.books.domain.entity.Authors;
+import com.bibliotech.books.domain.entity.Book;
 import com.bibliotech.books.domain.entity.Title;
 import com.bibliotech.books.domain.query.GetByIDQuery;
 import com.bibliotech.books.domain.repository.UpdateBookRepository;
@@ -21,7 +22,7 @@ public class UpdateBookUseCaseImpl implements UpdateBookUseCase {
     private final GetBookByIDUseCase getBookByIDUseCase;
 
     @Override
-    public void update(UpdateBookCommand command) {
+    public Book update(UpdateBookCommand command) {
         var bookId = new GetByIDQuery(command.id());
         var book = getBookByIDUseCase.getByID(bookId);
         var title = new Title(command.title());
@@ -32,5 +33,6 @@ public class UpdateBookUseCaseImpl implements UpdateBookUseCase {
         final var authors = new Authors(authorsSet);
         book.update(title, authors);
         updateBookRepository.update(book);
+        return book;
     }
 }

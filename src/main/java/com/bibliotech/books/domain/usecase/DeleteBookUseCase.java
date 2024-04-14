@@ -5,5 +5,5 @@ import com.bibliotech.books.domain.entity.Book;
 
 public interface DeleteBookUseCase {
 
-    void delete(DeleteBookCommand command);
+    Book delete(DeleteBookCommand command);
 }

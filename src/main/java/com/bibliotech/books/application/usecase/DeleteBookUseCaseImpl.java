@@ -1,6 +1,7 @@
 package com.bibliotech.books.application.usecase;
 
 import com.bibliotech.books.domain.command.DeleteBookCommand;
+import com.bibliotech.books.domain.entity.Book;
 import com.bibliotech.books.domain.query.ExistsByIDQuery;
 import com.bibliotech.books.domain.query.GetByIDQuery;
 import com.bibliotech.books.domain.repository.DeleteBookRepository;
@@ -19,7 +20,7 @@ public class DeleteBookUseCaseImpl implements DeleteBookUseCase {
     private final DeleteBookRepository deleteBookRepository;
 
     @Override
-    public void delete(DeleteBookCommand command) {
+    public Book delete(DeleteBookCommand command) {
         var queryExists = new ExistsByIDQuery(command.id());
         existsBookByIDUseCase.exists(queryExists);
 
@@ -27,5 +28,6 @@ public class DeleteBookUseCaseImpl implements DeleteBookUseCase {
         var book = getBookByIDUseCase.getByID(getByIDQuery);
         book.delete();
         deleteBookRepository.delete(book);
+        return book;
     }
 }

@@ -17,7 +17,7 @@ public class CreateBookUseCaseImpl implements CreateBookUseCase {
     private final CreateBookRepository createBookRepository;
 
     @Override
-    public void create(CreateBookCommand command) {
+    public Book create(CreateBookCommand command) {
         final var id = new BookID(command.id());
         final var title = new Title(command.title());
         final var authorsSet = command.authors()
@@ -32,5 +32,6 @@ public class CreateBookUseCaseImpl implements CreateBookUseCase {
         );
 
         createBookRepository.create(book);
+        return book;
     }
 }

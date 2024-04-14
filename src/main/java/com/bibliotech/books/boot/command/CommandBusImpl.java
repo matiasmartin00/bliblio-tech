@@ -3,6 +3,7 @@ package com.bibliotech.books.boot.command;
 import com.bibliotech.books.domain.command.Command;
 import com.bibliotech.books.domain.command.CommandBus;
 import com.bibliotech.books.domain.command.CommandHandler;
+import com.bibliotech.books.domain.event.EventBus;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.inject.Any;
@@ -18,9 +19,11 @@ import java.util.*;
 public class CommandBusImpl<C extends Command> implements CommandBus {
 
     private final Map<Class<C>, CommandHandler<C>> commandHandlers;
+    private final EventBus eventBus;
 
     @Inject
-    public CommandBusImpl(@Any Instance<CommandHandler<? extends Command>> commandHandlers) {
+    public CommandBusImpl(@Any Instance<CommandHandler<? extends Command>> commandHandlers, EventBus eventBus) {
+        this.eventBus = eventBus;
         Map<Class<C>, CommandHandler<C>> temp = new HashMap<>();
         commandHandlers.forEach(handler -> {
             temp.put((Class<C>) handler.listenTo(), (CommandHandler<C>) handler);
@@ -32,6 +35,7 @@ public class CommandBusImpl<C extends Command> implements CommandBus {
     public void execute(Command command) {
         var handler = Optional.ofNullable(commandHandlers.get(command.getClass()))
                 .orElseThrow(() -> new RuntimeException("Command can't be handler " + command.getClass().getSimpleName()));
-        handler.execute((C) command);
+        var aggregate = handler.execute((C) command);
+        eventBus.send(aggregate);
     }
 }
